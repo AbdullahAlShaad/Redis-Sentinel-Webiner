@@ -1,0 +1,28 @@
+apiVersion: ops.kubedb.com/v1alpha1
+kind: RedisOpsRequest
+metadata:
+  name: rdops-tls-add
+  namespace: demo
+spec:
+  type: ReconfigureTLS
+  databaseRef:
+    name: redis-sentinel
+  tls:
+    sentinel:
+      ref:
+        name: sentinel-tls
+        namespace: hello
+      removeUnusedSentinel: true
+    issuerRef:
+      apiGroup: cert-manager.io
+      name: redis-ca-issuer
+      kind: ClusterIssuer
+    certificates:
+    - alias: server
+      subject:
+        organizations:
+        - kubedb:server
+      dnsNames:
+      - localhost
+      ipAddresses:
+      - "127.0.0.1"
